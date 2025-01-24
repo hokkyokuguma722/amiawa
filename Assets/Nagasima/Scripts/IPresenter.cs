@@ -1,6 +1,6 @@
 using UnityEngine.PlayerLoop;
 
-interface IPresenter
+public interface IPresenter
 {
     void Initialize();
     void Show();
