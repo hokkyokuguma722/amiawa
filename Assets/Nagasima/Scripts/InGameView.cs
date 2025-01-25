@@ -11,6 +11,7 @@ public interface IInGameView : IView
     public void UpdateMaicImage(bool isSpeech);
     public Transform GetSpeechBubbleTransform();
     public void SetGameResultPerformance(bool isClear);
+    public void SetNeedleImage();
 }
 
 public class InGameView : MonoBehaviour, IInGameView
@@ -21,6 +22,7 @@ public class InGameView : MonoBehaviour, IInGameView
     [SerializeField] private Image speechBubbleImage;
     [SerializeField] private Sprite[] speechBubbleSprites;
     [SerializeField] private GameObject needleImage;
+    [SerializeField] private GameObject arrowIndicaterImage;
     [SerializeField] private Image maicImage;
     [SerializeField] private Sprite[] maicSprite;
     [SerializeField] private GameObject[] menFaceImageObjects;
@@ -51,7 +53,7 @@ public class InGameView : MonoBehaviour, IInGameView
     /// <param name="scale"></param>
     public void UpdateVoiceRecorderImage(float scale)
     {
-        voiceRecorderImage.transform.localScale = new Vector3(scale, 1, 1);
+        voiceRecorderImage.rectTransform.localScale = new Vector3(scale, 1, 1);
     }
 
     /// <summary>
@@ -70,7 +72,7 @@ public class InGameView : MonoBehaviour, IInGameView
     public void UpdateSpeechBubbleImage(float scale, float spectrum)
     {
         //大きさを変形
-        speechBubbleImage.transform.localScale = new Vector3(1, scale, 1);
+        speechBubbleImage.transform.localScale = new Vector3(scale * 5, scale * 5, 1);
 
 
         //TODO:数値は仮
@@ -95,7 +97,7 @@ public class InGameView : MonoBehaviour, IInGameView
     /// <param name="scale"></param>
     public void UpdateMouthImage(float scale)
     {
-        voiceRecorderImage.transform.localScale = new Vector3(1 + scale, 1 + scale, 1);
+        mouthImage.transform.localScale = new Vector3(1 + scale, 1 + scale, 1);
     }
 
     /// <summary>
@@ -131,5 +133,15 @@ public class InGameView : MonoBehaviour, IInGameView
         sceneImages[0].gameObject.SetActive(false);
         sceneImages[1].gameObject.SetActive(isClear);
         sceneImages[2].gameObject.SetActive(!isClear);
+    }
+
+    /// <summary>
+    /// 針を出す
+    /// </summary>
+    /// <param name="isReady"></param>
+    public void SetNeedleImage()
+    {
+        needleImage.gameObject.SetActive(true);
+        arrowIndicaterImage.SetActive(true);
     }
 }
