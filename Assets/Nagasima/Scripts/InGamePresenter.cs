@@ -12,6 +12,8 @@ public class InGamePresenter : IPresenter
 
     private float speed = 10.0f;
 
+    private bool isReady = false;
+
     private CompositeDisposable compositeDisposable = new();
 
     public InGamePresenter(InGameModel model, IInGameView view, PresenterChanger pChanger, AudioSource audioSource)
@@ -51,15 +53,21 @@ public class InGamePresenter : IPresenter
                     var volume = SoundCalcurater.CalculateAudioVolume(micAudioSource.clip, ref pos);
 
                     Debug.Log(volume);
-                    var Spectrum = SoundCalcurater.AnalyzeSpectrum(micAudioSource);
+                    var spectrum = SoundCalcurater.AnalyzeSpectrum(micAudioSource);
 
-                    inGameView.SetVoiceImage(1 + volume);
+                    inGameView.UpdateSpeechBubbleImage(1 + volume, spectrum);
                 }
 
                 if (Input.GetKeyUp(KeyCode.Space))
                 {
                     Debug.Log("マイク配列 (Realtek(R) Audio)");
                     MicInputEnd(targetDevice);
+                    isReady = true;
+                }
+
+                if (isReady)
+                {
+                   inGameView.UpdateNeedleImage(speed * Time.deltaTime);
                 }
             })
             .AddTo(compositeDisposable);
@@ -83,14 +91,5 @@ public class InGamePresenter : IPresenter
     private void MicInputEnd(string deviceName)
     {
         Microphone.End(deviceName);
-    }
-
-    private float GetArrowEdgePosition()
-    {
-        float position;
-
-        position = speed * Time.deltaTime;
-
-        return position;
     }
 }
