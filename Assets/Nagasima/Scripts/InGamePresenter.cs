@@ -39,7 +39,7 @@ public class InGamePresenter : IPresenter
                     var volume = SoundCalcurater.CalculateAudioVolume(micAudioSource.clip, ref pos);
                     var Spectrum = SoundCalcurater.AnalyzeSpectrum(micAudioSource);
 
-
+                    inGameView.SetVoiceImage(volume);
                 }
 
                 if (Input.GetKeyUp("space"))
