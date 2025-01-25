@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class Container : MonoBehaviour
 {
     private PresenterChanger presenterChanger;
@@ -17,13 +19,23 @@ public class Container : MonoBehaviour
     public InGamePresenter inGamePresenter;
     private InGameModel inGameModel;
 
-    //InGameView‚Ì’†g‚ªŒˆ‚Ü‚Á‚Ä‚¢‚È‚¢‚½‚ß•Û—¯
-    //[SerializeField]
-    //private InGameView inGameView;
+    private AudioSource audioSource;
 
-    public void Initialize() 
-    { 
+    private GameResultsPresenter gameResultsPresenter;
+    private GameResultsModel gameResultsModel;
+
+    public void Initialize()
+    {
+        audioSource = GetComponent<AudioSource>();
+
         titleModel = new();
+        inGameModel = new();
+        gameResultsModel = new();
+
+        titlePresenter = new(titleModel, titleView, presenterChanger);
+        inGamePresenter = new(inGameModel, inGameView, presenterChanger, audioSource);
+        gameResultsPresenter = new(gameResultsModel, resultView, presenterChanger);
+
 
         presenterChanger = new();
         Dictionary<string, IPresenter> presenterDictionary = new Dictionary<string, IPresenter>()
@@ -33,13 +45,12 @@ public class Container : MonoBehaviour
             },
             {
                 "InGamePresenter", inGamePresenter
+            },
+            {
+                "GameresultsPresenter", gameResultsPresenter
             }
         };
         presenterChanger.Initialize(presenterDictionary);
 
-        titlePresenter = new(titleModel, titleView, presenterChanger);
-
-        //InGameView‚Ì’†g‚ªŒˆ‚Ü‚Á‚Ä‚¢‚È‚¢‚½‚ß•Û—¯
-        //inGamePresenter = new(inGameModel, InGameView, presenterChanger);
     }
 }

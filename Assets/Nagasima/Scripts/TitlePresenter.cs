@@ -33,8 +33,6 @@ public class TitlePresenter : IPresenter
         titleModel = model;
         titleView = view;
         presenterChanger = pChanger;
-
-        titleView.Show();
     }
 
     private void SetButtonAction()
@@ -43,7 +41,7 @@ public class TitlePresenter : IPresenter
             .Subscribe(_ =>
             {
                 Debug.Log("ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½");
-                presenterChanger.ChangePresenter("gamePresenter");
+                presenterChanger.ChangePresenter("InGamePresenter");
             })
             .AddTo(disposables);
 
