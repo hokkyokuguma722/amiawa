@@ -23,7 +23,9 @@ public class InGameView : MonoBehaviour, IInGameView
     [SerializeField] private GameObject needleImage;
     [SerializeField] private Image maicImage;
     [SerializeField] private Sprite[] maicSprite;
-    [SerializeField] private Image[] faceImages;
+    [SerializeField] private GameObject[] menFaceImageObjects;
+    [SerializeField] private GameObject[] womenFaceImageObjects;
+
 
     private const float MaxAngle = 45.0f; // 最大角度（度数法）
     private float currentAngle = 0.0f; // 現在の角度
@@ -126,5 +128,8 @@ public class InGameView : MonoBehaviour, IInGameView
     /// <param name="isClear"></param>
     public void SetGameResultPerformance(bool isClear)
     {
+        sceneImages[0].gameObject.SetActive(false);
+        sceneImages[1].gameObject.SetActive(isClear);
+        sceneImages[2].gameObject.SetActive(!isClear);
     }
 }

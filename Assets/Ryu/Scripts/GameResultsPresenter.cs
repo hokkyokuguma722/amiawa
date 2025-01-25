@@ -1,6 +1,4 @@
-using Cysharp.Threading.Tasks;
 using UniRx;
-using UnityEngine;
 
 public class GameResultsPresenter : IPresenter
 {
@@ -8,16 +6,18 @@ public class GameResultsPresenter : IPresenter
     private GameResultsView gameResultsView;
     private PresenterChanger presenterChanger;
 
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private CompositeDisposable disposables = new();
 
     public void Initialize()
     {
-        SetButtonAciton();
+        SetButtonAction();
     }
+
     public void Show()
     {
         gameResultsView.Show();
     }
+
     public void Hide()
     {
         gameResultsView.Hide();
@@ -30,14 +30,10 @@ public class GameResultsPresenter : IPresenter
         presenterChanger = pChanger;
     }
 
-    private void SetButtonAciton()
+    private void SetButtonAction()
     {
         gameResultsView.onClickStartButtonAsObservale
-            .Subscribe(_ =>
-            {
-                Debug.Log("�{�^���������ꂽ");
-                presenterChanger.ChangePresenter("gamePresenter");
-            })
-        .AddTo(disposables);
+            .Subscribe(_ => { presenterChanger.ChangePresenter("titlePresenter"); })
+            .AddTo(disposables);
     }
 }
