@@ -13,17 +13,17 @@ public class InGamePresenter : IPresenter
 
     string targetDevice = "";
 
-    private float speed = 10.0f;
+    private const float Speed = 20.0f;
 
     private float currentAngle;
     private bool isIncreasing = false;
-    private float MaxAngle;
+    private const float MaxAngle = 45;
     private Vector3 targetPoint = new Vector3(0, 0, 0);
 
     private bool isStopped = false;
-    private float minAngle = 30.0f; //成功判定角度
-    private float maxAngle = 60.0f; //成功判定角度
-    private float stopDistance = 10.0f;
+    private const float MinBubbleAngle = 30.0f; //成功判定角度
+    private const float MaxBubbleAngle = 60.0f; //成功判定角度
+    private const float stopDistance = 10.0f;
 
     private bool isTransforming = false;
     private bool isClear = false;
@@ -68,7 +68,7 @@ public class InGamePresenter : IPresenter
 
     private Quaternion GetQuaternion()
     {
-        float volume = speed * Time.deltaTime;
+        float volume = Speed * Time.deltaTime;
 
         // 角度を更新
         if (isIncreasing)
@@ -83,46 +83,14 @@ public class InGamePresenter : IPresenter
         else
         {
             currentAngle -= volume;
-            if (currentAngle <= 0)
+            if (currentAngle <= -MaxAngle)
             {
-                currentAngle = 0;
+                currentAngle = -MaxAngle;
                 isIncreasing = true; // 増加に切り替え
             }
         }
 
         return Quaternion.Euler(0, 0, currentAngle);
-    }
-
-    private void BubleTransform()
-    {
-        if (isStopped) return; // 静止中は処理をスキップ
-
-        // 現在の角度を取得（オブジェクトのz軸方向を基準とする）
-        float angle = Vector3.Angle(Vector3.right, inGameView.GetSpeechBubbleTransform().right);
-
-        if (angle < minAngle || angle > maxAngle)
-        {
-            // 範囲外: 現在の方向に直進
-            inGameView.SetSpeechBubbleImage(Vector3.right * speed * Time.deltaTime);
-        }
-        else
-        {
-            // 範囲内: 目標点への距離を計算
-            float distanceToTarget = Vector3.Distance(inGameView.GetSpeechBubbleTransform().position, targetPoint);
-
-            if (distanceToTarget > stopDistance)
-            {
-                // 目標点に向かって移動
-                Vector3 direction = (targetPoint - inGameView.GetSpeechBubbleTransform().position).normalized;
-                inGameView.SetSpeechBubbleImage(direction * speed * Time.deltaTime);
-            }
-            else
-            {
-                // 目標点付近で静止
-                isStopped = true;
-                Debug.Log("目標点付近で静止しました。");
-            }
-        }
     }
 
     private void SetObservableUpdateBubble()
@@ -131,6 +99,7 @@ public class InGamePresenter : IPresenter
             .Subscribe(_ =>
             {
                 inGameView.UpdateMaicImage(isInputting);
+                inGameView.SetNeedleImage();
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
@@ -171,14 +140,14 @@ public class InGamePresenter : IPresenter
                 {
                     inGameView.UpdateNeedleImage(GetQuaternion());
 
-                    if (Input.GetKeyDown(KeyCode.KeypadEnter))
+                    if (Input.GetKeyDown(KeyCode.Space))
                     {
-                        isIncreasing = true;
+                        isTransforming = true;
                     }
                 }
                 else
                 {
-                    BubleTransform();
+                    BubbleTransform();
 
                     if (isStopped)
                     {
@@ -190,5 +159,38 @@ public class InGamePresenter : IPresenter
                 }
             })
             .AddTo(compositeDisposableNeedle);
+    }
+
+    private void BubbleTransform()
+    {
+        if (isStopped) return; // 静止中は処理をスキップ
+
+        // 現在の角度を取得（オブジェクトのz軸方向を基準とする）
+        float angle = Vector3.Angle(Vector3.right, inGameView.GetSpeechBubbleTransform().right);
+
+        if (angle is < MinBubbleAngle or > MaxBubbleAngle)
+        {
+            // 範囲外: 現在の方向に直進
+            inGameView.SetSpeechBubbleImage(-Vector3.right * Speed * Time.deltaTime);
+            isStopped = true;
+        }
+        else
+        {
+            // 範囲内: 目標点への距離を計算
+            float distanceToTarget = Vector3.Distance(inGameView.GetSpeechBubbleTransform().position, targetPoint);
+
+            if (distanceToTarget > stopDistance)
+            {
+                // 目標点に向かって移動
+                Vector3 direction = (targetPoint - inGameView.GetSpeechBubbleTransform().position).normalized;
+                inGameView.SetSpeechBubbleImage(direction * Speed * Time.deltaTime);
+            }
+            else
+            {
+                // 目標点付近で静止
+                isStopped = true;
+                Debug.Log("目標点付近で静止しました。");
+            }
+        }
     }
 }

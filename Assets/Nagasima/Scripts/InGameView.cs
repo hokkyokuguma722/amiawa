@@ -71,9 +71,16 @@ public class InGameView : MonoBehaviour, IInGameView
     /// <param name="scale"></param>
     public void UpdateSpeechBubbleImage(float scale, float spectrum)
     {
-        //大きさを変形
-        speechBubbleImage.transform.localScale = new Vector3(scale * 5, scale * 5, 1);
+        //小数点第二以下を切り捨て
+        var scaleFloor = Mathf.Floor(scale * 10f) / 10f;
 
+        //ラープ 現在地　目標値　補完族度
+
+        //大きさを変形
+        speechBubbleImage.transform.localScale = new Vector3(
+            1 + Mathf.Lerp(speechBubbleImage.transform.localScale.x, scale, 0.1f),
+            1 + Mathf.Lerp(speechBubbleImage.transform.localScale.x, scale, 0.1f),
+            1);
 
         //TODO:数値は仮
         //形状を変化
@@ -97,7 +104,7 @@ public class InGameView : MonoBehaviour, IInGameView
     /// <param name="scale"></param>
     public void UpdateMouthImage(float scale)
     {
-        mouthImage.transform.localScale = new Vector3(1 + scale, 1 + scale, 1);
+        // mouthImage.transform.localScale = new Vector3(1 + scale, 1 + scale, 1);
     }
 
     /// <summary>
@@ -107,7 +114,7 @@ public class InGameView : MonoBehaviour, IInGameView
     public void UpdateNeedleImage(Quaternion quaternion)
     {
         // 針を回転
-        needleImage.transform.rotation = quaternion;
+         needleImage.transform.rotation = quaternion;
     }
 
     /// <summary>
