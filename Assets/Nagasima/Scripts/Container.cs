@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class Container : MonoBehaviour
 {
     private PresenterChanger presenterChanger;
@@ -17,12 +19,16 @@ public class Container : MonoBehaviour
     public InGamePresenter inGamePresenter;
     private InGameModel inGameModel;
 
+    private AudioSource audioSource;
+
     //InGameView‚Ì’†g‚ªŒˆ‚Ü‚Á‚Ä‚¢‚È‚¢‚½‚ß•Û—¯
     //[SerializeField]
     //private InGameView inGameView;
 
     public void Initialize() 
     { 
+        audioSource = GetComponent<AudioSource>();
+
         titleModel = new();
 
         presenterChanger = new();
