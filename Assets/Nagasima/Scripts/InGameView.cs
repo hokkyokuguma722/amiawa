@@ -6,7 +6,7 @@ public interface IInGameView : IView
     void UpdateSpeechBubbleImage(float scale, float spectrum);
     public void UpdateVoiceRecorderImage(float scale);
     public void UpdateMouthImage(float scale);
-    public void UpdateNeedleImage(float volume);
+    public void UpdateNeedleImage(Quaternion quaternion);
     public void SetSpeechBubbleImage(Vector3 position);
 }
 
@@ -85,33 +85,10 @@ public class InGameView : MonoBehaviour, IInGameView
     /// 針の振れの動き
     /// </summary>
     /// <param name="volume"></param>
-    public void UpdateNeedleImage(float volume)
+    public void UpdateNeedleImage(Quaternion quaternion)
     {
-        void Update()
-        {
-            // 角度を更新
-            if (isIncreasing)
-            {
-                currentAngle += volume;
-                if (currentAngle >= MaxAngle)
-                {
-                    currentAngle = MaxAngle;
-                    isIncreasing = false; // 減少に切り替え
-                }
-            }
-            else
-            {
-                currentAngle -= volume;
-                if (currentAngle <= 0)
-                {
-                    currentAngle = 0;
-                    isIncreasing = true; // 増加に切り替え
-                }
-            }
-
-            // 針を回転
-            needleImage.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
-        }
+        // 針を回転
+        needleImage.transform.rotation = quaternion;
     }
 
     public void SetSpeechBubbleImage(Vector3 position)
