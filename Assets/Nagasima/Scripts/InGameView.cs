@@ -1,6 +1,11 @@
 using UnityEngine;
 
-public class InGameView : MonoBehaviour, IView
+public interface IInGameView : IView
+{
+
+}
+
+public class InGameView : MonoBehaviour, IInGameView
 {
     public void Initialize()
     {

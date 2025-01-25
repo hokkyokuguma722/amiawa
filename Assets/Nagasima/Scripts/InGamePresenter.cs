@@ -3,10 +3,10 @@ using UnityEngine;
 public class InGamePresenter : IPresenter
 {
     private InGameModel inGameModel;
-    private InGameView inGameView;
+    private IInGameView inGameView;
     private PresenterChanger presenterChanger;
 
-    public InGamePresenter(InGameModel model, InGameView view, PresenterChanger pChanger)
+    public InGamePresenter(InGameModel model, IInGameView view, PresenterChanger pChanger)
     {
         inGameModel = model;
         inGameView = view;

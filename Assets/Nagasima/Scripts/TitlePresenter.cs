@@ -39,11 +39,19 @@ public class TitlePresenter : IPresenter
 
     private void SetButtonAction()
     {
-        titleView.onClickStartButtonAsObservale
+        titleView.onClickStartButtonAsObservable
             .Subscribe(_ =>
             {
                 Debug.Log("ボタンが押された");
                 presenterChanger.ChangePresenter("gamePresenter");
+            })
+            .AddTo(disposables);
+
+        titleView.onClickQuitButtonAsObservable
+            .Subscribe(_ =>
+            {
+                Debug.Log("Quitボタンが押された");
+                Application.Quit();
             })
             .AddTo(disposables);
     }
