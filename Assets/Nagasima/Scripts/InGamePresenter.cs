@@ -11,8 +11,6 @@ public class InGamePresenter : IPresenter
         inGameModel = model;
         inGameView = view;
         presenterChanger = pChanger;
-
-        inGameView.Show();
     }
 
     public void Initialize()
@@ -23,12 +21,12 @@ public class InGamePresenter : IPresenter
     public void Show()
     {
         Debug.Log("インゲーム画面を表示");
-        inGameView.gameObject.SetActive(true);
+        inGameView.Show();
     }
 
     public void Hide()
     {
         Debug.Log("インゲーム画面を非表示");
-        inGameView.gameObject.SetActive(false);
+        inGameView.Hide();
     }
 }
