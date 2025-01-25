@@ -7,6 +7,7 @@ public interface IInGameView : IView
     public void UpdateVoiceRecorderImage(float scale);
     public void UpdateMouthImage(float scale);
     public void UpdateNeedleImage(float volume);
+    public void SetSpeechBubbleImage(Vector3 position);
 }
 
 public class InGameView : MonoBehaviour, IInGameView
@@ -111,5 +112,9 @@ public class InGameView : MonoBehaviour, IInGameView
             // 針を回転
             needleImage.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
         }
+    }
+
+    public void SetSpeechBubbleImage(Vector3 position)
+    {
     }
 }
