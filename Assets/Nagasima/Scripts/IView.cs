@@ -1,4 +1,4 @@
-interface IView
+public interface IView
 {
     void Initialize();
     void Show();
