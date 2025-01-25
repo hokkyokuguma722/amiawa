@@ -8,6 +8,8 @@ public interface IInGameView : IView
     public void UpdateMouthImage(float scale);
     public void UpdateNeedleImage(Quaternion quaternion);
     public void SetSpeechBubbleImage(Vector3 position);
+    public void UpdateMaicImage(bool isSpeech);
+    public Transform GetSpeechBubbleTransform();
 }
 
 public class InGameView : MonoBehaviour, IInGameView
@@ -44,6 +46,14 @@ public class InGameView : MonoBehaviour, IInGameView
     public void UpdateVoiceRecorderImage(float scale)
     {
         voiceRecorderImage.transform.localScale = new Vector3(scale, 1, 1);
+    }
+
+    /// <summary>
+    /// マイクのマークを変更する
+    /// </summary>
+    /// <param name="isSpeech"></param>
+    public void UpdateMaicImage(bool isSpeech)
+    {
     }
 
     /// <summary>
@@ -91,7 +101,12 @@ public class InGameView : MonoBehaviour, IInGameView
         needleImage.transform.rotation = quaternion;
     }
 
+    /// <summary>
+    /// 吹き出しの位置を指定
+    /// </summary>
+    /// <param name="position"></param>
     public void SetSpeechBubbleImage(Vector3 position)
     {
+        speechBubbleImage.transform.position = position;
     }
 }
