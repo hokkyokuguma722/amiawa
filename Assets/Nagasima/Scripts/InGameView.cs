@@ -10,6 +10,7 @@ public interface IInGameView : IView
     public void SetSpeechBubbleImage(Vector3 position);
     public void UpdateMaicImage(bool isSpeech);
     public Transform GetSpeechBubbleTransform();
+    public void SetGameResultPerformance(bool isClear);
 }
 
 public class InGameView : MonoBehaviour, IInGameView
@@ -113,5 +114,14 @@ public class InGameView : MonoBehaviour, IInGameView
     public Transform GetSpeechBubbleTransform()
     {
         return speechBubbleImage.transform;
+    }
+
+    /// <summary>
+    /// ゲームクリア演出
+    /// </summary>
+    /// <param name="isClear"></param>
+    public void SetGameResultPerformance(bool isClear)
+    {
+        
     }
 }
