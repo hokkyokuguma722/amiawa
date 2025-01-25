@@ -21,8 +21,8 @@ public class InGamePresenter : IPresenter
     private Vector3 targetPoint = new Vector3(0, 0, 0);
 
     private bool isStopped = false;
-    private float minAngle = 30.0f;     //成功判定角度
-    private float maxAngle = 60.0f;     //成功判定角度
+    private float minAngle = 30.0f; //成功判定角度
+    private float maxAngle = 60.0f; //成功判定角度
     private float stopDistance = 10.0f;
 
     private bool isTransforming = false;
@@ -42,16 +42,6 @@ public class InGamePresenter : IPresenter
     public void Initialize()
     {
         Debug.Log("InGamePresenter��������");
-
-        //TODO:あとでつかうかも
-        // foreach (var device in Microphone.devices)
-        // {
-        //     Debug.Log($"Device Name: {device}");
-        //     if (device.Contains(myDevice))
-        //     {
-        //         targetDevice = device;
-        //     }
-        // }
 
         SetObservableUpdateBubble();
     }
@@ -144,7 +134,7 @@ public class InGamePresenter : IPresenter
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    MicInputStart("マイク配列 (Realtek(R) Audio)");
+                    MicInputStart(null);
                     isInputting = true;
                 }
 
