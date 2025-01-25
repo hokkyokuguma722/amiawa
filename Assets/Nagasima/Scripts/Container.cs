@@ -9,6 +9,10 @@ public class Container : MonoBehaviour
     private TitleModel titleModel;
     [SerializeField]
     private TitleView titleView;
+    [SerializeField]
+    private InGameView inGameView;
+    [SerializeField]
+    private GameResultsView resultView;
 
     public InGamePresenter inGamePresenter;
     private InGameModel inGameModel;
