@@ -10,6 +10,8 @@ public class InGamePresenter : IPresenter
     private int pos = 0;
     private string myDevice;
 
+    private float speed = 10.0f;
+
     private CompositeDisposable compositeDisposable = new();
 
     public InGamePresenter(InGameModel model, IInGameView view, PresenterChanger pChanger, AudioSource audioSource)
@@ -81,5 +83,14 @@ public class InGamePresenter : IPresenter
     private void MicInputEnd(string deviceName)
     {
         Microphone.End(deviceName);
+    }
+
+    private float GetArrowEdgePosition()
+    {
+        float position;
+
+        position = speed * Time.deltaTime;
+
+        return position;
     }
 }
