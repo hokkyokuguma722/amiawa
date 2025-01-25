@@ -13,17 +13,19 @@ public class InGamePresenter : IPresenter
 
     string targetDevice = "";
 
-    private const float Speed = 20.0f;
-
+    private const float NeedleSpeed = 25.0f;
+    private const float Speed = 1.0f;
+    
     private float currentAngle;
     private bool isIncreasing = false;
     private const float MaxAngle = 45;
-    private Vector3 targetPoint = new Vector3(0, 0, 0);
+    private readonly Vector3 TargetPoint = new Vector3(337, -64, 0);
 
     private bool isStopped = false;
     private const float MinBubbleAngle = 30.0f; //成功判定角度
     private const float MaxBubbleAngle = 60.0f; //成功判定角度
-    private const float stopDistance = 10.0f;
+    private const float ClearStopDistance = 10.0f;
+    private const float FailedStopDistance = 800f;
 
     private bool isTransforming = false;
     private bool isClear = false;
@@ -68,7 +70,7 @@ public class InGamePresenter : IPresenter
 
     private Quaternion GetQuaternion()
     {
-        float volume = Speed * Time.deltaTime;
+        float volume = NeedleSpeed * Time.deltaTime;
 
         // 角度を更新
         if (isIncreasing)
@@ -133,6 +135,8 @@ public class InGamePresenter : IPresenter
 
     private void SetObjectVariableUpdateNeedle()
     {
+        var initialSpeechBubblePosition = inGameView.GetSpeechBubbleTransform().position;
+
         Observable.EveryUpdate()
             .Subscribe(_ =>
             {
@@ -147,12 +151,11 @@ public class InGamePresenter : IPresenter
                 }
                 else
                 {
-                    BubbleTransform();
+                    BubbleTransform(initialSpeechBubblePosition);
 
                     if (isStopped)
                     {
                         Debug.Log("クリア");
-                        isClear = true;
                         inGameView.SetGameResultPerformance(isClear);
                         compositeDisposableNeedle.Dispose();
                     }
@@ -161,34 +164,42 @@ public class InGamePresenter : IPresenter
             .AddTo(compositeDisposableNeedle);
     }
 
-    private void BubbleTransform()
+    private void BubbleTransform(Vector3 position)
     {
         if (isStopped) return; // 静止中は処理をスキップ
 
         // 現在の角度を取得（オブジェクトのz軸方向を基準とする）
         float angle = Vector3.Angle(Vector3.right, inGameView.GetSpeechBubbleTransform().right);
 
+        //失敗したパターン
         if (angle is < MinBubbleAngle or > MaxBubbleAngle)
         {
             // 範囲外: 現在の方向に直進
-            inGameView.SetSpeechBubbleImage(-Vector3.right * Speed * Time.deltaTime);
-            isStopped = true;
+            inGameView.SetSpeechBubbleImage(Vector3.right * Speed * Time.deltaTime);
+            float distance = Vector3.Distance(inGameView.GetSpeechBubbleTransform().position, position);
+
+            if (distance > FailedStopDistance)
+            {
+                isStopped = true;
+                isClear = false;
+            }
         }
-        else
+        else　//成功したパターン
         {
             // 範囲内: 目標点への距離を計算
-            float distanceToTarget = Vector3.Distance(inGameView.GetSpeechBubbleTransform().position, targetPoint);
+            float distanceToTarget = Vector3.Distance(inGameView.GetSpeechBubbleTransform().position, TargetPoint);
 
-            if (distanceToTarget > stopDistance)
+            if (distanceToTarget > ClearStopDistance)
             {
                 // 目標点に向かって移動
-                Vector3 direction = (targetPoint - inGameView.GetSpeechBubbleTransform().position).normalized;
+                Vector3 direction = (TargetPoint - inGameView.GetSpeechBubbleTransform().position).normalized;
                 inGameView.SetSpeechBubbleImage(direction * Speed * Time.deltaTime);
             }
             else
             {
                 // 目標点付近で静止
                 isStopped = true;
+                isClear = true;
                 Debug.Log("目標点付近で静止しました。");
             }
         }
