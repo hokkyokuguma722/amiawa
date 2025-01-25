@@ -11,7 +11,11 @@ public class TitleView : MonoBehaviour, IView
     [SerializeField]
     private Button startButton;
 
-    public IObservable<Unit> onClickStartButtonAsObservale => startButton.onClick.AsObservable();
+    [SerializeField]
+    private Button quitButton;
+
+    public IObservable<Unit> onClickStartButtonAsObservable => startButton.onClick.AsObservable();
+    public IObservable<Unit> onClickQuitButtonAsObservable => quitButton.onClick.AsObservable();
 
     public void Initialize()
     {
