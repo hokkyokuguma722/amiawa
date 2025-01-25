@@ -1,4 +1,6 @@
 using UnityEngine;
+using UniRx;
+using Cysharp.Threading.Tasks;
 
 public class InGamePresenter : IPresenter
 {
@@ -6,6 +8,8 @@ public class InGamePresenter : IPresenter
     private IInGameView inGameView;
     private PresenterChanger presenterChanger;
     private AudioSource micAudioSource;
+
+    private CompositeDisposable compositeDisposable = new();
 
     public InGamePresenter(InGameModel model, IInGameView view, PresenterChanger pChanger, AudioSource audioSource)
     {
@@ -18,6 +22,29 @@ public class InGamePresenter : IPresenter
     public void Initialize()
     {
         Debug.Log("InGamePresenterを初期化");
+
+        Observable.EveryUpdate()
+            .Subscribe(_ =>
+            {
+                if (Input.GetKeyDown("space"))
+                {
+                    Debug.Log("スペースキーを押した");
+                    MicInputStart("Example");
+                }
+
+                if (Input.GetKey("spave"))
+                {
+                    Debug.Log("スペースキーを押している");
+                }
+
+                if (Input.GetKeyUp("space"))
+                {
+                    Debug.Log("スペースキーを離した");
+                    MicInputEnd("Example");
+                }
+            })
+            .AddTo(compositeDisposable);
+
     }
 
     public void Show()
@@ -32,8 +59,15 @@ public class InGamePresenter : IPresenter
         inGameView.Hide();
     }
 
-    private void GetMicInput(string deviceName)
+    private void MicInputStart(string deviceName)
     {
         micAudioSource.clip = Microphone.Start(deviceName, true, 10, 44100);
     }
+
+    private void MicInputEnd(string deviceName)
+    {
+        Microphone.End(deviceName);
+    }
+
+
 }
