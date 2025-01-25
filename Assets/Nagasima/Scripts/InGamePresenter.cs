@@ -9,6 +9,7 @@ public class InGamePresenter : IPresenter
     private AudioSource micAudioSource;
     private int pos = 0;
     private string myDevice;
+    private bool isInputting = false;
 
     string targetDevice = "";
 
@@ -142,6 +143,7 @@ public class InGamePresenter : IPresenter
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     MicInputStart("マイク配列 (Realtek(R) Audio)");
+                    isInputting = true;
                 }
 
                 if (Input.GetKey(KeyCode.Space))
@@ -157,6 +159,7 @@ public class InGamePresenter : IPresenter
                 if (Input.GetKeyUp(KeyCode.Space))
                 {
                     Debug.Log("マイク配列 (Realtek(R) Audio)");
+                    isInputting = false;
                     MicInputEnd(targetDevice);
                     SetObjectVariableUpdateNeedle();
                     compositeDisposableBUbble.Dispose();
