@@ -1,5 +1,3 @@
-using UnityEngine.PlayerLoop;
-
 public interface IPresenter
 {
     void Initialize();

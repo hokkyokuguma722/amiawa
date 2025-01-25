@@ -12,6 +12,8 @@ public class Container : MonoBehaviour
 
     public InGamePresenter inGamePresenter;
     private InGameModel inGameModel;
+
+    //InGameView‚Ì’†g‚ªŒˆ‚Ü‚Á‚Ä‚¢‚È‚¢‚½‚ß•Û—¯
     //[SerializeField]
     //private InGameView inGameView;
 
@@ -32,6 +34,8 @@ public class Container : MonoBehaviour
         presenterChanger.Initialize(presenterDictionary);
 
         titlePresenter = new(titleModel, titleView, presenterChanger);
+
+        //InGameView‚Ì’†g‚ªŒˆ‚Ü‚Á‚Ä‚¢‚È‚¢‚½‚ß•Û—¯
         //inGamePresenter = new(inGameModel, InGameView, presenterChanger);
     }
 }

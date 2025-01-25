@@ -6,6 +6,13 @@ public class InGamePresenter : IPresenter
     private InGameView inGameView;
     private PresenterChanger presenterChanger;
 
+    public InGamePresenter(InGameModel model, InGameView view, PresenterChanger pChanger)
+    {
+        inGameModel = model;
+        inGameView = view;
+        presenterChanger = pChanger;
+    }
+
     public void Initialize()
     {
         Debug.Log("InGamePresenter‚ğ‰Šú‰»");
@@ -21,14 +28,5 @@ public class InGamePresenter : IPresenter
     {
         Debug.Log("ƒCƒ“ƒQ[ƒ€‰æ–Ê‚ğ”ñ•\¦");
         inGameView.Hide();
-    }
-
-    public InGamePresenter(InGameModel model, InGameView view, PresenterChanger pChanger)
-    {
-        inGameModel = model;
-        inGameView = view;
-        presenterChanger = pChanger;
-
-        inGameView.Show();
     }
 }
