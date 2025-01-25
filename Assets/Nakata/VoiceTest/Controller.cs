@@ -44,7 +44,7 @@ namespace Nakata.VoiceTest
             m_Cube.transform.localScale = new Vector3(1, 1 + m_AmpGain * m_AudioLevel, 1);
         }
 
-        //TODO:かんすうか
+        //TODO:かんすうか 音の高さ
         private float[] GetUpdatedAudio()
         {
             int nowAudioPos = Microphone.GetPosition(null); // nullでデフォルトデバイス

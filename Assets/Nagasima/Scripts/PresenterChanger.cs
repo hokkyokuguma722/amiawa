@@ -17,6 +17,7 @@ public class PresenterChanger
     {
         nextPresenter = presenterDictionary.GetValueOrDefault(presenterName);
         currentPresenter.Hide();
+        nextPresenter.Initialize();
         nextPresenter.Show();
         currentPresenter = nextPresenter;
     }

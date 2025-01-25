@@ -1,6 +1,5 @@
-using UnityEngine;
 using UniRx;
-using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 public class InGamePresenter : IPresenter
 {
@@ -9,6 +8,7 @@ public class InGamePresenter : IPresenter
     private PresenterChanger presenterChanger;
     private AudioSource micAudioSource;
     private int pos = 0;
+    private string myDevice;
 
     private CompositeDisposable compositeDisposable = new();
 
@@ -22,45 +22,54 @@ public class InGamePresenter : IPresenter
 
     public void Initialize()
     {
-        Debug.Log("InGamePresenter‚ğ‰Šú‰»");
+        Debug.Log("InGamePresenterï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+
+        string targetDevice = "";
+
+        //TODO:ã‚ã¨ã§ã¤ã‹ã†ã‹ã‚‚
+        // foreach (var device in Microphone.devices)
+        // {
+        //     Debug.Log($"Device Name: {device}");
+        //     if (device.Contains(myDevice))
+        //     {
+        //         targetDevice = device;
+        //     }
+        // }
 
         Observable.EveryUpdate()
             .Subscribe(_ =>
             {
-                if (Input.GetKeyDown("space"))
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    Debug.Log("ƒXƒy[ƒXƒL[‚ğ‰Ÿ‚µ‚½");
-                    MicInputStart("Example");
+                    MicInputStart("ãƒã‚¤ã‚¯é…åˆ— (Realtek(R) Audio)");
                 }
 
-                if (Input.GetKey("spave"))
+                if (Input.GetKey(KeyCode.Space))
                 {
-                    Debug.Log("ƒXƒy[ƒXƒL[‚ğ‰Ÿ‚µ‚Ä‚¢‚é");
                     var volume = SoundCalcurater.CalculateAudioVolume(micAudioSource.clip, ref pos);
+
+                    Debug.Log(volume);
                     var Spectrum = SoundCalcurater.AnalyzeSpectrum(micAudioSource);
 
-                    inGameView.SetVoiceImage(volume);
+                    inGameView.SetVoiceImage(1 + volume);
                 }
 
-                if (Input.GetKeyUp("space"))
+                if (Input.GetKeyUp(KeyCode.Space))
                 {
-                    Debug.Log("ƒXƒy[ƒXƒL[‚ğ—£‚µ‚½");
-                    MicInputEnd("Example");
+                    Debug.Log("ãƒã‚¤ã‚¯é…åˆ— (Realtek(R) Audio)");
+                    MicInputEnd(targetDevice);
                 }
             })
             .AddTo(compositeDisposable);
-
     }
 
     public void Show()
     {
-        Debug.Log("ƒCƒ“ƒQ[ƒ€‰æ–Ê‚ğ•\¦");
         inGameView.Show();
     }
 
     public void Hide()
     {
-        Debug.Log("ƒCƒ“ƒQ[ƒ€‰æ–Ê‚ğ”ñ•\¦");
         inGameView.Hide();
     }
 
@@ -73,6 +82,4 @@ public class InGamePresenter : IPresenter
     {
         Microphone.End(deviceName);
     }
-
-
 }

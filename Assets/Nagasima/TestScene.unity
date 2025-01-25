@@ -1454,8 +1454,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6a14b0006657242a9c11158ef0a67e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingameImage: {fileID: 647875920}
-  voiceRecorderImage: {fileID: 647875920}
+  ingameImage: {fileID: 0}
+  voiceRecorderImage: {fileID: 0}
   storyImage: {fileID: 0}
   VoiceImage: {fileID: 0}
 --- !u!1 &1585652205
@@ -1639,8 +1639,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1019cdfa1d4d54d823be276ba7e759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  titleImage: {fileID: 1098153340}
-  startButton: {fileID: 104835099}
+  titleImage: {fileID: 0}
+  startButton: {fileID: 0}
 --- !u!1 &1782496192
 GameObject:
   m_ObjectHideFlags: 0

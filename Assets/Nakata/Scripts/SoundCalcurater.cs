@@ -45,6 +45,8 @@ public static　class SoundCalcurater
 
         lastAudioPos = nowAudioPos;
 
+        if (waveData.Length <= 0) return 0;
+
         var average = waveData.Average(Mathf.Abs);
 
         return 1 + average * AmpGain;

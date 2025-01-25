@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
 
 public interface IInGameView : IView
 {
@@ -10,22 +8,17 @@ public interface IInGameView : IView
 
 public class InGameView : MonoBehaviour, IInGameView
 {
-    [SerializeField]
-    private Image ingameImage;
+    [SerializeField] private Image ingameImage;
 
-    [SerializeField]
-    private Image voiceRecorderImage;
+    [SerializeField] private Image voiceRecorderImage;
 
-    [SerializeField]
-    private Image storyImage;
+    [SerializeField] private Image storyImage;
 
-    [SerializeField]
-    private Image VoiceImage;
+    [SerializeField] private Image VoiceImage;
 
 
     public void Initialize()
     {
-
     }
 
     public void Show()
@@ -37,6 +30,7 @@ public class InGameView : MonoBehaviour, IInGameView
     {
         gameObject.SetActive(false);
     }
+
     public void Frame(float framesize)
     {
         ingameImage.transform.localScale = Vector3.right * framesize;
@@ -45,7 +39,7 @@ public class InGameView : MonoBehaviour, IInGameView
 
     public void SetVoiceImage(float scale)
     {
-        VoiceImage.transform.localScale *= scale;
+        VoiceImage.transform.localScale = new Vector3(1, scale, 1);
     }
 
     public void VoiceRecorder(float voiderecordersize)

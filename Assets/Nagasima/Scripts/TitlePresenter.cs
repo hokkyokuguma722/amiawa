@@ -12,20 +12,20 @@ public class TitlePresenter : IPresenter
 
     public void Initialize()
     {
-        Debug.Log("TitlePresenter‚ð‰Šú‰»");
+        Debug.Log("TitlePresenterï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         SetButtonAction();
     }
 
     public void Show()
     {
         titleView.Show();
-        Debug.Log("ƒ^ƒCƒgƒ‹‰æ–Ê‚ð•\Ž¦");
+        // Debug.Log("ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½Ê‚ï¿½\ï¿½ï¿½");
     }
 
     public void Hide()
     {
         titleView.Hide();
-        Debug.Log("ƒ^ƒCƒgƒ‹‰æ–Ê‚ð”ñ•\Ž¦");
+        // Debug.Log("ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½Ê‚ï¿½ï¿½\ï¿½ï¿½");
     }
 
     public TitlePresenter(TitleModel model, TitleView view, PresenterChanger pChanger)
@@ -40,7 +40,7 @@ public class TitlePresenter : IPresenter
         titleView.onClickStartButtonAsObservable
             .Subscribe(_ =>
             {
-                Debug.Log("ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½");
+                Debug.Log("ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½");
                 presenterChanger.ChangePresenter("InGamePresenter");
             })
             .AddTo(disposables);
@@ -48,7 +48,7 @@ public class TitlePresenter : IPresenter
         titleView.onClickQuitButtonAsObservable
             .Subscribe(_ =>
             {
-                Debug.Log("Quitƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½");
+                Debug.Log("Quitï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½");
                 Application.Quit();
             })
             .AddTo(disposables);

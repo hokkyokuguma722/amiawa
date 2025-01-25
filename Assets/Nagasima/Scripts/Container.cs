@@ -31,13 +31,13 @@ public class Container : MonoBehaviour
         titleModel = new();
         inGameModel = new();
         gameResultsModel = new();
+        presenterChanger = new();
 
         titlePresenter = new(titleModel, titleView, presenterChanger);
         inGamePresenter = new(inGameModel, inGameView, presenterChanger, audioSource);
         gameResultsPresenter = new(gameResultsModel, resultView, presenterChanger);
 
 
-        presenterChanger = new();
         Dictionary<string, IPresenter> presenterDictionary = new Dictionary<string, IPresenter>()
         {
             {

@@ -12,18 +12,15 @@ public class GameResultsPresenter : IPresenter
 
     public void Initialize()
     {
-        Debug.Log("TitlePresenter‚ð‰Šú‰»");
         SetButtonAciton();
     }
     public void Show()
     {
         gameResultsView.Show();
-        Debug.Log("ƒ^ƒCƒgƒ‹‰æ–Ê‚ð•\Ž¦");
     }
     public void Hide()
     {
         gameResultsView.Hide();
-        Debug.Log("ƒ^ƒCƒgƒ‹‰æ–Ê‚ð”ñ•\Ž¦");
     }
 
     public GameResultsPresenter(GameResultsModel model, GameResultsView view, PresenterChanger pChanger)
@@ -31,8 +28,6 @@ public class GameResultsPresenter : IPresenter
         gameResultsModel = model;
         gameResultsView = view;
         presenterChanger = pChanger;
-
-        gameResultsView.Show();
     }
 
     private void SetButtonAciton()
@@ -40,7 +35,7 @@ public class GameResultsPresenter : IPresenter
         gameResultsView.onClickStartButtonAsObservale
             .Subscribe(_ =>
             {
-                Debug.Log("ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½");
+                Debug.Log("ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½");
                 presenterChanger.ChangePresenter("gamePresenter");
             })
         .AddTo(disposables);
