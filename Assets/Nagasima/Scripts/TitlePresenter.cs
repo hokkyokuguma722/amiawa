@@ -42,6 +42,7 @@ public class TitlePresenter : IPresenter
             {
                 Debug.Log("�{�^���������ꂽ");
                 presenterChanger.ChangePresenter("InGamePresenter");
+                SoundManager.instance.PalySE(0);
             })
             .AddTo(disposables);
 
@@ -50,6 +51,7 @@ public class TitlePresenter : IPresenter
             {
                 Debug.Log("Quit�{�^���������ꂽ");
                 Application.Quit();
+                SoundManager.instance.PalySE(0);
             })
             .AddTo(disposables);
     }
