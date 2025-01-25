@@ -24,11 +24,11 @@ public class TitleView : MonoBehaviour, IView
 
     public void Show()
     {
-        titleImage.gameObject.SetActive(true);
+        gameObject.SetActive(true);
     }
 
     public void Hide()
     {
-        titleImage.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 }
