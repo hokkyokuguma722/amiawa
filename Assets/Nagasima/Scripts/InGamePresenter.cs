@@ -140,6 +140,8 @@ public class InGamePresenter : IPresenter
         Observable.EveryUpdate()
             .Subscribe(_ =>
             {
+                inGameView.UpdateMaicImage(isInputting);
+
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     MicInputStart("マイク配列 (Realtek(R) Audio)");
@@ -149,6 +151,8 @@ public class InGamePresenter : IPresenter
                 if (Input.GetKey(KeyCode.Space))
                 {
                     var volume = SoundCalcurater.CalculateAudioVolume(micAudioSource.clip, ref pos);
+                    inGameView.UpdateVoiceRecorderImage(volume);
+                    inGameView.UpdateMouthImage(volume);
 
                     Debug.Log(volume);
                     var spectrum = SoundCalcurater.AnalyzeSpectrum(micAudioSource);
