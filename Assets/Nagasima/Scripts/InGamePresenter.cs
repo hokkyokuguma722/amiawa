@@ -8,6 +8,7 @@ public class InGamePresenter : IPresenter
     private IInGameView inGameView;
     private PresenterChanger presenterChanger;
     private AudioSource micAudioSource;
+    private int pos = 0;
 
     private CompositeDisposable compositeDisposable = new();
 
@@ -35,6 +36,10 @@ public class InGamePresenter : IPresenter
                 if (Input.GetKey("spave"))
                 {
                     Debug.Log("スペースキーを押している");
+                    var volume = SoundCalcurater.CalculateAudioVolume(micAudioSource.clip, ref pos);
+                    var Spectrum = SoundCalcurater.AnalyzeSpectrum(micAudioSource);
+
+
                 }
 
                 if (Input.GetKeyUp("space"))
