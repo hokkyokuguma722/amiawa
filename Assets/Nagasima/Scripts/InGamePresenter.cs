@@ -10,9 +10,10 @@ public class InGamePresenter : IPresenter
     private int pos = 0;
     private string myDevice;
 
+    string targetDevice = "";
+
     private float speed = 10.0f;
 
-    private bool isReady = false;
     private float currentAngle;
     private bool isIncreasing = false;
     private float MaxAngle;
@@ -21,8 +22,13 @@ public class InGamePresenter : IPresenter
     private bool isStopped = false;
     private float minAngle = 30.0f;     //成功判定角度
     private float maxAngle = 60.0f;     //成功判定角度
+    private float stopDistance = 10.0f;
 
-    private CompositeDisposable compositeDisposable = new();
+    private bool isTransforming = false;
+    private bool isClear = false;
+
+    private CompositeDisposable compositeDisposableBUbble = new();
+    private CompositeDisposable compositeDisposableNeedle = new();
 
     public InGamePresenter(InGameModel model, IInGameView view, PresenterChanger pChanger, AudioSource audioSource)
     {
@@ -36,8 +42,6 @@ public class InGamePresenter : IPresenter
     {
         Debug.Log("InGamePresenter��������");
 
-        string targetDevice = "";
-
         //TODO:あとでつかうかも
         // foreach (var device in Microphone.devices)
         // {
@@ -48,39 +52,7 @@ public class InGamePresenter : IPresenter
         //     }
         // }
 
-        Observable.EveryUpdate()
-            .Subscribe(_ =>
-            {
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    MicInputStart("マイク配列 (Realtek(R) Audio)");
-                }
-
-                if (Input.GetKey(KeyCode.Space))
-                {
-                    var volume = SoundCalcurater.CalculateAudioVolume(micAudioSource.clip, ref pos);
-
-                    Debug.Log(volume);
-                    var spectrum = SoundCalcurater.AnalyzeSpectrum(micAudioSource);
-
-                    inGameView.UpdateSpeechBubbleImage(1 + volume, spectrum);
-                }
-
-                if (Input.GetKeyUp(KeyCode.Space))
-                {
-                    Debug.Log("マイク配列 (Realtek(R) Audio)");
-                    MicInputEnd(targetDevice);
-                    isReady = true;
-                }
-
-                if (isReady)
-                {
-                    inGameView.UpdateNeedleImage(GetQuaternion());
-
-
-                }
-            })
-            .AddTo(compositeDisposable);
+        SetObservableUpdateBubble();
     }
 
     public void Show()
@@ -135,7 +107,7 @@ public class InGamePresenter : IPresenter
         if (isStopped) return; // 静止中は処理をスキップ
 
         // 現在の角度を取得（オブジェクトのz軸方向を基準とする）
-        float angle = Vector3.Angle(Vector3.right, transform.right);
+        float angle = Vector3.Angle(Vector3.right, inGameView.GetSpeechBubbleTransform().right);
 
         if (angle < minAngle || angle > maxAngle)
         {
@@ -145,12 +117,12 @@ public class InGamePresenter : IPresenter
         else
         {
             // 範囲内: 目標点への距離を計算
-            float distanceToTarget = Vector3.Distance(transform.position, targetPoint);
+            float distanceToTarget = Vector3.Distance(inGameView.GetSpeechBubbleTransform().position, targetPoint);
 
             if (distanceToTarget > stopDistance)
             {
                 // 目標点に向かって移動
-                Vector3 direction = (targetPoint - transform.position).normalized;
+                Vector3 direction = (targetPoint - inGameView.GetSpeechBubbleTransform().position).normalized;
                 inGameView.SetSpeechBubbleImage(direction * speed * Time.deltaTime);
             }
             else
@@ -160,5 +132,64 @@ public class InGamePresenter : IPresenter
                 Debug.Log("目標点付近で静止しました。");
             }
         }
+    }
+
+    private void SetObservableUpdateBubble()
+    {
+        Observable.EveryUpdate()
+            .Subscribe(_ =>
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    MicInputStart("マイク配列 (Realtek(R) Audio)");
+                }
+
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    var volume = SoundCalcurater.CalculateAudioVolume(micAudioSource.clip, ref pos);
+
+                    Debug.Log(volume);
+                    var spectrum = SoundCalcurater.AnalyzeSpectrum(micAudioSource);
+
+                    inGameView.UpdateSpeechBubbleImage(1 + volume, spectrum);
+                }
+
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    Debug.Log("マイク配列 (Realtek(R) Audio)");
+                    MicInputEnd(targetDevice);
+                    SetObjectVariableUpdateNeedle();
+                    compositeDisposableBUbble.Dispose();
+                }
+            })
+            .AddTo(compositeDisposableBUbble);
+    }
+
+    private void SetObjectVariableUpdateNeedle()
+    {
+        Observable.EveryUpdate()
+            .Subscribe(_ =>
+            {
+                if (!isTransforming)
+                {
+                    inGameView.UpdateNeedleImage(GetQuaternion());
+
+                    if (Input.GetKeyDown(KeyCode.KeypadEnter))
+                    {
+                        isIncreasing = true;
+                    }
+                }
+                else
+                {
+                    BubleTransform();
+
+                    if (isStopped)
+                    {
+                        Debug.Log("クリア");
+                        isClear = true;
+                    }
+                }
+            })
+            .AddTo(compositeDisposableNeedle);
     }
 }
