@@ -109,4 +109,9 @@ public class InGameView : MonoBehaviour, IInGameView
     {
         speechBubbleImage.transform.position = position;
     }
+
+    public Transform GetSpeechBubbleTransform()
+    {
+        return speechBubbleImage.transform;
+    }
 }
