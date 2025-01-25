@@ -187,6 +187,8 @@ public class InGamePresenter : IPresenter
                     {
                         Debug.Log("クリア");
                         isClear = true;
+                        inGameView.SetGameResultPerformance(isClear);
+                        compositeDisposableNeedle.Dispose();
                     }
                 }
             })
