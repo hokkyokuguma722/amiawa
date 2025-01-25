@@ -21,6 +21,9 @@ public class InGameView : MonoBehaviour, IInGameView
     [SerializeField] private Image speechBubbleImage;
     [SerializeField] private Sprite[] speechBubbleSprites;
     [SerializeField] private GameObject needleImage;
+    [SerializeField] private Image maicImage;
+    [SerializeField] private Sprite[] maicSprite;
+    [SerializeField] private Image[] faceImages;
 
     private const float MaxAngle = 45.0f; // 最大角度（度数法）
     private float currentAngle = 0.0f; // 現在の角度
@@ -55,6 +58,7 @@ public class InGameView : MonoBehaviour, IInGameView
     /// <param name="isSpeech"></param>
     public void UpdateMaicImage(bool isSpeech)
     {
+        maicImage.sprite = isSpeech ? maicSprite[0] : maicSprite[1];
     }
 
     /// <summary>
@@ -122,6 +126,5 @@ public class InGameView : MonoBehaviour, IInGameView
     /// <param name="isClear"></param>
     public void SetGameResultPerformance(bool isClear)
     {
-        
     }
 }
