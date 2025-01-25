@@ -3,12 +3,17 @@ using UnityEngine;
 
 public class Container : MonoBehaviour
 {
+    private PresenterChanger presenterChanger;
+
     public TitlePresenter titlePresenter;
     private TitleModel titleModel;
     [SerializeField]
     private TitleView titleView;
 
-    private PresenterChanger presenterChanger;
+    public InGamePresenter inGamePresenter;
+    private InGameModel inGameModel;
+    //[SerializeField]
+    //private InGameView inGameView;
 
     public void Initialize() 
     { 
@@ -19,10 +24,14 @@ public class Container : MonoBehaviour
         {
             {
                 "titlePresenter", titlePresenter
+            },
+            {
+                "InGamePresenter", inGamePresenter
             }
         };
         presenterChanger.Initialize(presenterDictionary);
 
         titlePresenter = new(titleModel, titleView, presenterChanger);
+        //inGamePresenter = new(inGameModel, InGameView, presenterChanger);
     }
 }

@@ -1,7 +1,6 @@
 interface IView
 {
-    void Hide();
-    void Show();
-
     void Initialize();
+    void Show();
+    void Hide();
 }

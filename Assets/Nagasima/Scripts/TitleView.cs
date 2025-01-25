@@ -13,9 +13,9 @@ public class TitleView : MonoBehaviour, IView
 
     public IObservable<Unit> onClickStartButtonAsObservale => startButton.onClick.AsObservable();
 
-    public void Hide()
+    public void Initialize()
     {
-        titleImage.gameObject.SetActive(false);
+
     }
 
     public void Show()
@@ -23,8 +23,8 @@ public class TitleView : MonoBehaviour, IView
         titleImage.gameObject.SetActive(true);
     }
 
-    public void Initialize()
+    public void Hide()
     {
-        
+        titleImage.gameObject.SetActive(false);
     }
 }
