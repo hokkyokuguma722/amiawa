@@ -51,7 +51,7 @@ public class TitlePresenter : IPresenter
             {
                 Debug.Log("Quit�{�^���������ꂽ");
                 Application.Quit();
-                SoundManager.instance.PalySE(0);
+                SoundManager.instance.PalySE(1);
             })
             .AddTo(disposables);
     }
