@@ -47,7 +47,7 @@ public class Container : MonoBehaviour
                 "InGamePresenter", inGamePresenter
             },
             {
-                "GameresultsPresenter", gameResultsPresenter
+                "GameResultsPresenter", gameResultsPresenter
             }
         };
         presenterChanger.Initialize(presenterDictionary);

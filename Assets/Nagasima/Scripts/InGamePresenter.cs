@@ -10,27 +10,18 @@ public class InGamePresenter : IPresenter
     private PresenterChanger presenterChanger;
     private AudioSource micAudioSource;
     private int pos = 0;
-    private string myDevice;
     private bool isInputting = false;
-
-    string targetDevice = "";
-
-    private const float NeedleSpeed = 25.0f;
-    private const float Speed = 1.0f;
-
     private float currentAngle;
     private bool isIncreasing = false;
-    private const float MaxAngle = 45;
-    private readonly Vector3 TargetPoint = new Vector3(292, -83, 0);
-
-    private bool isStopped = false;
-    private const float MinBubbleAngle = 30.0f; //成功判定角度
-    private const float MaxBubbleAngle = 60.0f; //成功判定角度
-    private const float ClearStopDistance = 10.0f;
-    private const float FailedStopDistance = 800f;
-
-    private bool isTransforming = false;
     private bool isClear = false;
+    private Quaternion finalQuaternion;
+    private Vector3 initialSpeechBubblePosition;
+    
+    private const float NeedleSpeed = 25.0f;
+    private const float MaxAngle = 45;
+    private const float FailedStopDistance = 800f;
+    private const float Radius = 200; //クリア判定をとる処理
+    private readonly Vector3 TargetPoint = new Vector3(292, -83, 0);
 
     private readonly CompositeDisposable compositeDisposableBUbble = new();
     private readonly CompositeDisposable compositeDisposableNeedle = new();
@@ -49,7 +40,7 @@ public class InGamePresenter : IPresenter
         Debug.Log("InGamePresenter��������");
         SoundManager.instance.PlayBGM(SceneType.FristScene);
         
-        await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space)).SuppressCancellationThrow();
+        await UniTask.WaitForSeconds(0.7f).SuppressCancellationThrow();
         
         inGameView.ChangeSceneImage();
 
@@ -143,17 +134,13 @@ public class InGamePresenter : IPresenter
                 {
                     Debug.Log("マイク配列 (Realtek(R) Audio)");
                     isInputting = false;
-                    MicInputEnd(targetDevice);
+                    MicInputEnd(null);
                     SetObjectVariableUpdateNeedle();
                     compositeDisposableBUbble.Dispose();
                 }
             })
             .AddTo(compositeDisposableBUbble);
     }
-
-    private Quaternion finalQuaternion;
-    private Vector3 initialSpeechBubblePosition;
-    private const float Distance = 20; //クリア判定をとる処理
     
     private void SetObjectVariableUpdateNeedle()
     {
@@ -178,20 +165,34 @@ public class InGamePresenter : IPresenter
     private async UniTask Hoge()
     {
         // 点Aから円Bの中心への方向ベクトル
-        Vector3 direction = (TargetPoint - initialSpeechBubblePosition).normalized;
+        Vector3 direction = (TargetPoint - initialSpeechBubblePosition);
 
-        // 円Bに接する点Cを計算
-        Vector3 pointC = TargetPoint + direction * Distance;
+        // 点Aと円Bの中心の距離
+        float distanceOA = direction.magnitude;
+
+        // 点Aが円の外側にあるか確認
+        if (distanceOA <= Radius)
+        {
+
+            Debug.LogError("点Aは円の内側または円周上にあります。接点を計算できません。");
+            return;
+        }
+
+        // 接点までの比率を計算
+        float ratio = Radius / distanceOA;
+
+        // 接点Cを計算
+        Vector3 pointC = TargetPoint + direction.normalized * Radius;
 
         // ベクトルABとACを計算
-        Vector3 vectorAB = TargetPoint - initialSpeechBubblePosition;
+        Vector3 vectorAC_ = -pointC - initialSpeechBubblePosition;
         Vector3 vectorAC = pointC - initialSpeechBubblePosition;
 
         // 角度CABを計算
         //半分にしたのが判定用の角度
-        float angleCAB = Vector3.Angle(vectorAB, vectorAC);
+        float angleCAC = Vector3.Angle(vectorAC_, vectorAC);
 
-        float judgeAngleCAB = angleCAB / 2;
+        float judgeAngleCAB = angleCAC / 2;
         //場所の計算
         //クリア
         SoundManager.instance.PalySE(5);
@@ -214,15 +215,19 @@ public class InGamePresenter : IPresenter
                 initialSpeechBubblePosition.z // 2Dの場合はzをそのまま維持
             );
 
+            //吹き出しの移動
             await inGameView.GetSpeechBubbleTransform().DOAnchorPos(movePosition, 1f).AsyncWaitForCompletion();
-            SoundManager.instance.PalySE(4);
 
+            SoundManager.instance.PalySE(4);
         }
 
-        await UniTask.WaitForSeconds(2);
+        await UniTask.WaitForSeconds(1.5f);
      
         inGameModel.currentSceneType.Value = isClear ? SceneType.SecondScene : SceneType.ForthScene;
         inGameView.SetGameResultPerformance(isClear);
-      
+
+        await UniTask.WaitForSeconds(1f);
+        
+        presenterChanger.ChangePresenter("GameResultsPresenter");
     }
 }
