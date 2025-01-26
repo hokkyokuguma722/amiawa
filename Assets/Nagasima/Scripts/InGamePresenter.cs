@@ -44,9 +44,13 @@ public class InGamePresenter : IPresenter
         micAudioSource = audioSource;
     }
 
-    public void Initialize()
+    public async void Initialize()
     {
         Debug.Log("InGamePresenter��������");
+        
+        await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space)).SuppressCancellationThrow();
+        
+        inGameView.ChangeSceneImage();
 
         SetObservableUpdateBubble();
     }
@@ -149,8 +153,7 @@ public class InGamePresenter : IPresenter
     private Quaternion finalQuaternion;
     private Vector3 initialSpeechBubblePosition;
     private const float Distance = 20; //クリア判定をとる処理
-
-
+    
     private void SetObjectVariableUpdateNeedle()
     {
         initialSpeechBubblePosition = inGameView.GetSpeechBubbleTransform().position;
@@ -212,6 +215,7 @@ public class InGamePresenter : IPresenter
 
         await UniTask.WaitForSeconds(2);
 
+        inGameModel.currentSceneType.Value = isClear ? SceneType.SecondScene : SceneType.ForthScene;
         inGameView.SetGameResultPerformance(isClear);
     }
 }
