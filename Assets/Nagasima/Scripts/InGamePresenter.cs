@@ -34,6 +34,7 @@ public class InGamePresenter : IPresenter
 
     private readonly CompositeDisposable compositeDisposableBUbble = new();
     private readonly CompositeDisposable compositeDisposableNeedle = new();
+    private readonly CompositeDisposable disposables = new CompositeDisposable();
 
     public InGamePresenter(InGameModel model, IInGameView view, PresenterChanger pChanger, AudioSource audioSource)
     {
@@ -58,6 +59,16 @@ public class InGamePresenter : IPresenter
     public void Hide()
     {
         inGameView.Hide();
+    }
+
+    private void SetReactiveProperty()
+    {
+        inGameModel.currentSceneType
+            .Subscribe(type =>
+            {
+                SoundManager.instance.PlayBGM(type);
+            })
+            .AddTo(disposables);
     }
 
     private void MicInputStart(string deviceName)
