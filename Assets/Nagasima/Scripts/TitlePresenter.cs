@@ -54,6 +54,7 @@ public class TitlePresenter : IPresenter
                 SoundManager.instance.PalySE(1);
             })
             .AddTo(disposables);
+        SoundManager.instance.PlayBGM(SceneType.ThridScene);
     }
 }
 
