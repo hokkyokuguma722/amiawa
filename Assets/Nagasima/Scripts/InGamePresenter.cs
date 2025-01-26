@@ -16,7 +16,7 @@ public class InGamePresenter : IPresenter
     private bool isClear = false;
     private Quaternion finalQuaternion;
     private Vector3 initialSpeechBubblePosition;
-    
+
     private const float NeedleSpeed = 25.0f;
     private const float MaxAngle = 45;
     private const float FailedStopDistance = 800f;
@@ -39,9 +39,9 @@ public class InGamePresenter : IPresenter
     {
         Debug.Log("InGamePresenter��������");
         SoundManager.instance.PlayBGM(SceneType.FristScene);
-        
+
         await UniTask.WaitForSeconds(0.7f).SuppressCancellationThrow();
-        
+
         inGameView.ChangeSceneImage();
 
         SetObservableUpdateBubble();
@@ -60,10 +60,7 @@ public class InGamePresenter : IPresenter
     private void SetReactiveProperty()
     {
         inGameModel.currentSceneType
-            .Subscribe(type =>
-            {
-                SoundManager.instance.PlayBGM(type);
-            })
+            .Subscribe(type => { SoundManager.instance.PlayBGM(type); })
             .AddTo(disposables);
     }
 
@@ -141,7 +138,7 @@ public class InGamePresenter : IPresenter
             })
             .AddTo(compositeDisposableBUbble);
     }
-    
+
     private void SetObjectVariableUpdateNeedle()
     {
         initialSpeechBubblePosition = inGameView.GetSpeechBubbleTransform().position;
@@ -173,7 +170,6 @@ public class InGamePresenter : IPresenter
         // 点Aが円の外側にあるか確認
         if (distanceOA <= Radius)
         {
-
             Debug.LogError("点Aは円の内側または円周上にあります。接点を計算できません。");
             return;
         }
@@ -196,11 +192,16 @@ public class InGamePresenter : IPresenter
         //場所の計算
         //クリア
         SoundManager.instance.PalySE(5);
+
         //吹き出しの移動
-        if (finalQuaternion.eulerAngles.z < judgeAngleCAB || finalQuaternion.eulerAngles.z > -judgeAngleCAB)
+        if (finalQuaternion.eulerAngles.z < judgeAngleCAB && finalQuaternion.eulerAngles.z > -judgeAngleCAB)
         {
-            var movePosition = pointC;
-            await inGameView.GetSpeechBubbleTransform().DOAnchorPos(movePosition, 10).AsyncWaitForCompletion();
+            if (finalQuaternion.eulerAngles.z < 0)
+            {
+                pointC *= -1;
+            }
+
+            await inGameView.GetSpeechBubbleTransform().DOAnchorPos(pointC, 10).AsyncWaitForCompletion();
             SoundManager.instance.PalySE(3);
         }
         else
@@ -208,12 +209,16 @@ public class InGamePresenter : IPresenter
             // 角度をラジアンに変換
             float angleInRadians = (finalQuaternion * Vector3.right).z * Mathf.Deg2Rad;
 
+            int normal = 1;
+            if (finalQuaternion.z < 0) normal = -1;
+
             // 新しい点の位置を計算
             Vector3 movePosition = new Vector3(
                 initialSpeechBubblePosition.x + FailedStopDistance * Mathf.Cos(angleInRadians),
-                initialSpeechBubblePosition.y + FailedStopDistance * Mathf.Sin(angleInRadians),
+                initialSpeechBubblePosition.y + FailedStopDistance * Mathf.Sin(angleInRadians) * normal,
                 initialSpeechBubblePosition.z // 2Dの場合はzをそのまま維持
             );
+
 
             //吹き出しの移動
             await inGameView.GetSpeechBubbleTransform().DOAnchorPos(movePosition, 1f).AsyncWaitForCompletion();
@@ -222,12 +227,12 @@ public class InGamePresenter : IPresenter
         }
 
         await UniTask.WaitForSeconds(1.5f);
-     
+
         inGameModel.currentSceneType.Value = isClear ? SceneType.SecondScene : SceneType.ForthScene;
         inGameView.SetGameResultPerformance(isClear);
 
         await UniTask.WaitForSeconds(1f);
-        
+
         presenterChanger.ChangePresenter("GameResultsPresenter");
     }
 }
