@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UniRx;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InGamePresenter : IPresenter
 {
@@ -231,8 +232,8 @@ public class InGamePresenter : IPresenter
         inGameModel.currentSceneType.Value = isClear ? SceneType.SecondScene : SceneType.ForthScene;
         inGameView.SetGameResultPerformance(isClear);
 
-        await UniTask.WaitForSeconds(1f);
+        await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space));
 
-        presenterChanger.ChangePresenter("GameResultsPresenter");
+        SceneManager.LoadScene(0);
     }
 }

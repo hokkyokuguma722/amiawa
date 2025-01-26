@@ -49,10 +49,12 @@ namespace Nakata.PichTest
 
             Debug.Log($"=== Device Set: {targetDevice} ===");
             _audioSource.clip = Microphone.Start(
-                targetDevice,
+                null,
                 true,
-                10,
+                3,
                 48000);
+            
+            _isRecording = true;
         }
 
         //TODO:値を返すように変更
