@@ -3,6 +3,7 @@ using DG.Tweening;
 using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class InGamePresenter : IPresenter
 {
@@ -21,12 +22,14 @@ public class InGamePresenter : IPresenter
     private const float NeedleSpeed = 25.0f;
     private const float MaxAngle = 45;
     private const float FailedStopDistance = 800f;
-    private const float Radius = 20; //クリア判定をとる処理
-    private readonly Vector3 TargetPoint = new Vector3(292, -83, 0);
+    private const float Radius = 400; //クリア判定をとる処理
+    private Vector3 TargetPoint = new Vector3(1300, 455, 0);
 
     private readonly CompositeDisposable compositeDisposableBUbble = new();
     private readonly CompositeDisposable compositeDisposableNeedle = new();
     private readonly CompositeDisposable disposables = new CompositeDisposable();
+
+    private RectTransform targetObjectPos;
 
     public InGamePresenter(InGameModel model, IInGameView view, PresenterChanger pChanger, AudioSource audioSource)
     {
@@ -46,6 +49,10 @@ public class InGamePresenter : IPresenter
         inGameView.ChangeSceneImage();
 
         SetObservableUpdateBubble();
+
+        targetObjectPos = GameObject.Find("TargetObj").GetComponent<RectTransform>();
+
+        TargetPoint = targetObjectPos.position;
     }
 
     public void Show()
@@ -195,8 +202,14 @@ public class InGamePresenter : IPresenter
         SoundManager.instance.PalySE(5);
 
         //吹き出しの移動
-        if (finalQuaternion.eulerAngles.z <= angleCAC && finalQuaternion.eulerAngles.z >= -angleCAC)
+        if (finalQuaternion.eulerAngles.z >= angleCAC && finalQuaternion.eulerAngles.z <= -angleCAC
+            &&
+            inGameView.GetSpeechBubbleTransform().localScale.x < 6f
+            &&
+            inGameView.GetSpeechBubbleTransform().localScale.x > 3f
+            )
         {
+            isClear = true;
             if (finalQuaternion.eulerAngles.z < 1)
             {
                 pointC = new Vector3(pointC.x, -pointC.y, pointC.z);
