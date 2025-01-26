@@ -4814,7 +4814,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1576717129
 Transform:
   m_ObjectHideFlags: 0
@@ -4851,8 +4851,8 @@ MonoBehaviour:
   sceneImages:
   - {fileID: 7039283339450885322}
   - {fileID: 167542731}
-  - {fileID: 1128241912}
   - {fileID: 226349664}
+  - {fileID: 1128241912}
   voiceRecorderImage: {fileID: 635124096}
   mouthImage: {fileID: 0}
   speechBubbleImage: {fileID: 15944779}
@@ -5050,7 +5050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   titleImage: {fileID: 0}
-  startButton: {fileID: 0}
+  startButton: {fileID: 104835099}
 --- !u!1 &1671434761
 GameObject:
   m_ObjectHideFlags: 0

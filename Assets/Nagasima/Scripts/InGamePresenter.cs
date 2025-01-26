@@ -20,7 +20,7 @@ public class InGamePresenter : IPresenter
     private const float NeedleSpeed = 25.0f;
     private const float MaxAngle = 45;
     private const float FailedStopDistance = 800f;
-    private const float Radius = 200; //クリア判定をとる処理
+    private const float Radius = 20; //クリア判定をとる処理
     private readonly Vector3 TargetPoint = new Vector3(292, -83, 0);
 
     private readonly CompositeDisposable compositeDisposableBUbble = new();
@@ -194,14 +194,14 @@ public class InGamePresenter : IPresenter
         SoundManager.instance.PalySE(5);
 
         //吹き出しの移動
-        if (finalQuaternion.eulerAngles.z < judgeAngleCAB && finalQuaternion.eulerAngles.z > -judgeAngleCAB)
+        if (finalQuaternion.eulerAngles.z <= angleCAC && finalQuaternion.eulerAngles.z >= -angleCAC)
         {
-            if (finalQuaternion.eulerAngles.z < 0)
+            if (finalQuaternion.eulerAngles.z < 1)
             {
-                pointC *= -1;
+                pointC = new Vector3(pointC.x, -pointC.y, pointC.z);
             }
 
-            await inGameView.GetSpeechBubbleTransform().DOAnchorPos(pointC, 10).AsyncWaitForCompletion();
+            await inGameView.GetSpeechBubbleTransform().DOAnchorPos(pointC, 1f).AsyncWaitForCompletion();
             SoundManager.instance.PalySE(3);
         }
         else

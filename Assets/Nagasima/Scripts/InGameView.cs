@@ -147,9 +147,9 @@ public class InGameView : MonoBehaviour, IInGameView
     /// <param name="isClear"></param>
     public void SetGameResultPerformance(bool isClear)
     {
-        sceneImages[0].gameObject.SetActive(false);
-        sceneImages[1].gameObject.SetActive(isClear);
-        sceneImages[2].gameObject.SetActive(!isClear);
+        sceneImages[1].gameObject.SetActive(false);
+        sceneImages[2].gameObject.SetActive(isClear);
+        sceneImages[3].gameObject.SetActive(!isClear);
     }
 
     /// <summary>
