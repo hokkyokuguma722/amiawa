@@ -78,9 +78,9 @@ public class InGameView : MonoBehaviour, IInGameView
         //ラープ 現在地　目標値　補完族度
 
         //大きさを変形
-        speechBubbleImage.transform.localScale = new Vector3(
-            1 + Mathf.Lerp(speechBubbleImage.transform.localScale.x, scale, 0.1f),
-            1 + Mathf.Lerp(speechBubbleImage.transform.localScale.x, scale, 0.1f),
+        speechBubbleImage.rectTransform.localScale = new Vector3(
+            Mathf.Lerp(speechBubbleImage.rectTransform.localScale.x, scale, 0.001f),
+            Mathf.Lerp(speechBubbleImage.rectTransform.localScale.x, scale, 0.001f),
             1);
 
         //TODO:数値は仮

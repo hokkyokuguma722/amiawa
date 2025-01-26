@@ -125,7 +125,7 @@ public class InGamePresenter : IPresenter
                     Debug.Log(volume);
                     var spectrum = SoundCalcurater.AnalyzeSpectrum(micAudioSource);
 
-                    inGameView.UpdateSpeechBubbleImage(1 + volume, spectrum);
+                    inGameView.UpdateSpeechBubbleImage((15 * volume), spectrum);
                 }
 
                 if (Input.GetKeyUp(KeyCode.Space))
