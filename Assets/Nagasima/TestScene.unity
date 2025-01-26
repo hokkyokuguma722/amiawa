@@ -2240,6 +2240,10 @@ MonoBehaviour:
   audioClipsSE:
   - {fileID: 8300000, guid: 166e4d6ed54eefd4985588ccccf64554, type: 3}
   - {fileID: 8300000, guid: 2080f16de5dabef43814094e5df3497e, type: 3}
+  - {fileID: 8300000, guid: fd155bfc5654c5e4bbe7d687351bb980, type: 3}
+  - {fileID: 8300000, guid: 20d9b12786ebf154199a65af4e092abf, type: 3}
+  - {fileID: 8300000, guid: dd3656f6b623f314a989710b874cb196, type: 3}
+  - {fileID: 8300000, guid: 6a29afb07e9908c498c94d4dd6970618, type: 3}
 --- !u!4 &752087997
 Transform:
   m_ObjectHideFlags: 0
