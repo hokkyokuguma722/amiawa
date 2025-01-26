@@ -47,6 +47,7 @@ public class InGamePresenter : IPresenter
     public async void Initialize()
     {
         Debug.Log("InGamePresenter��������");
+        SoundManager.instance.PlayBGM(SceneType.FristScene);
         
         await UniTask.WaitUntil(() => Input.GetKeyDown(KeyCode.Space)).SuppressCancellationThrow();
         
