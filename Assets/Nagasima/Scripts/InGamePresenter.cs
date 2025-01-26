@@ -215,7 +215,7 @@ public class InGamePresenter : IPresenter
             // 新しい点の位置を計算
             Vector3 movePosition = new Vector3(
                 initialSpeechBubblePosition.x + FailedStopDistance * Mathf.Cos(angleInRadians),
-                initialSpeechBubblePosition.y + FailedStopDistance * Mathf.Sin(angleInRadians) * normal,
+                initialSpeechBubblePosition.y * normal + FailedStopDistance * Mathf.Sin(angleInRadians),
                 initialSpeechBubblePosition.z // 2Dの場合はzをそのまま維持
             );
 
