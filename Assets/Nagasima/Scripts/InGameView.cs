@@ -12,6 +12,7 @@ public interface IInGameView : IView
     public RectTransform GetSpeechBubbleTransform();
     public void SetGameResultPerformance(bool isClear);
     public void SetNeedleImage();
+    public void ChangeSceneImage();
 }
 
 public class InGameView : MonoBehaviour, IInGameView
@@ -114,7 +115,7 @@ public class InGameView : MonoBehaviour, IInGameView
     public void UpdateNeedleImage(Quaternion quaternion)
     {
         // 針を回転
-         needleImage.transform.rotation = quaternion;
+        needleImage.transform.rotation = quaternion;
     }
 
     /// <summary>
@@ -129,6 +130,15 @@ public class InGameView : MonoBehaviour, IInGameView
     public RectTransform GetSpeechBubbleTransform()
     {
         return speechBubbleImage.rectTransform;
+    }
+
+    /// <summary>
+    /// 最初の場面を切り替える
+    /// </summary>
+    public void ChangeSceneImage()
+    {
+        sceneImages[0].gameObject.SetActive(false);
+        sceneImages[1].gameObject.SetActive(true);
     }
 
     /// <summary>
