@@ -169,6 +169,7 @@ public class InGamePresenter : IPresenter
                     finalQuaternion = GetQuaternion();
                     Hoge().Forget();
                     compositeDisposableNeedle.Dispose();
+                    SoundManager.instance.PalySE(2);
                 }
             })
             .AddTo(compositeDisposableNeedle);
@@ -193,11 +194,13 @@ public class InGamePresenter : IPresenter
         float judgeAngleCAB = angleCAB / 2;
         //場所の計算
         //クリア
+        SoundManager.instance.PalySE(5);
         //吹き出しの移動
         if (finalQuaternion.eulerAngles.z < judgeAngleCAB || finalQuaternion.eulerAngles.z > -judgeAngleCAB)
         {
             var movePosition = pointC;
             await inGameView.GetSpeechBubbleTransform().DOAnchorPos(movePosition, 10).AsyncWaitForCompletion();
+            SoundManager.instance.PalySE(3);
         }
         else
         {
@@ -211,12 +214,15 @@ public class InGamePresenter : IPresenter
                 initialSpeechBubblePosition.z // 2Dの場合はzをそのまま維持
             );
 
-            await inGameView.GetSpeechBubbleTransform().DOAnchorPos(movePosition, 10).AsyncWaitForCompletion();
+            await inGameView.GetSpeechBubbleTransform().DOAnchorPos(movePosition, 1f).AsyncWaitForCompletion();
+            SoundManager.instance.PalySE(4);
+
         }
 
         await UniTask.WaitForSeconds(2);
-
+     
         inGameModel.currentSceneType.Value = isClear ? SceneType.SecondScene : SceneType.ForthScene;
         inGameView.SetGameResultPerformance(isClear);
+      
     }
 }
