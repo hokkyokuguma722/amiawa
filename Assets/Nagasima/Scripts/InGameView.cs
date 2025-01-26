@@ -9,7 +9,7 @@ public interface IInGameView : IView
     public void UpdateNeedleImage(Quaternion quaternion);
     public void SetSpeechBubbleImage(Vector3 position);
     public void UpdateMaicImage(bool isSpeech);
-    public Transform GetSpeechBubbleTransform();
+    public RectTransform GetSpeechBubbleTransform();
     public void SetGameResultPerformance(bool isClear);
     public void SetNeedleImage();
 }
@@ -123,12 +123,12 @@ public class InGameView : MonoBehaviour, IInGameView
     /// <param name="position"></param>
     public void SetSpeechBubbleImage(Vector3 position)
     {
-        speechBubbleImage.transform.position = position;
+        speechBubbleImage.rectTransform.position = position;
     }
 
-    public Transform GetSpeechBubbleTransform()
+    public RectTransform GetSpeechBubbleTransform()
     {
-        return speechBubbleImage.transform;
+        return speechBubbleImage.rectTransform;
     }
 
     /// <summary>

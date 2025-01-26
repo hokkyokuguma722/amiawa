@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UniRx;
 using UnityEngine;
 
@@ -15,11 +17,11 @@ public class InGamePresenter : IPresenter
 
     private const float NeedleSpeed = 25.0f;
     private const float Speed = 1.0f;
-    
+
     private float currentAngle;
     private bool isIncreasing = false;
     private const float MaxAngle = 45;
-    private readonly Vector3 TargetPoint = new Vector3(337, -64, 0);
+    private readonly Vector3 TargetPoint = new Vector3(292, -83, 0);
 
     private bool isStopped = false;
     private const float MinBubbleAngle = 30.0f; //成功判定角度
@@ -30,8 +32,8 @@ public class InGamePresenter : IPresenter
     private bool isTransforming = false;
     private bool isClear = false;
 
-    private CompositeDisposable compositeDisposableBUbble = new();
-    private CompositeDisposable compositeDisposableNeedle = new();
+    private readonly CompositeDisposable compositeDisposableBUbble = new();
+    private readonly CompositeDisposable compositeDisposableNeedle = new();
 
     public InGamePresenter(InGameModel model, IInGameView view, PresenterChanger pChanger, AudioSource audioSource)
     {
@@ -133,75 +135,72 @@ public class InGamePresenter : IPresenter
             .AddTo(compositeDisposableBUbble);
     }
 
+    private Quaternion finalQuaternion;
+    private Vector3 initialSpeechBubblePosition;
+    private const float Distance = 20; //クリア判定をとる処理
+
+
     private void SetObjectVariableUpdateNeedle()
     {
-        var initialSpeechBubblePosition = inGameView.GetSpeechBubbleTransform().position;
+        initialSpeechBubblePosition = inGameView.GetSpeechBubbleTransform().position;
 
         Observable.EveryUpdate()
             .Subscribe(_ =>
             {
-                if (!isTransforming)
-                {
-                    inGameView.UpdateNeedleImage(GetQuaternion());
+                inGameView.UpdateNeedleImage(GetQuaternion());
 
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        isTransforming = true;
-                    }
-                }
-                else
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    BubbleTransform(initialSpeechBubblePosition);
-
-                    if (isStopped)
-                    {
-                        Debug.Log("クリア");
-                        inGameView.SetGameResultPerformance(isClear);
-                        compositeDisposableNeedle.Dispose();
-                    }
+                    finalQuaternion = GetQuaternion();
+                    Hoge().Forget();
+                    compositeDisposableNeedle.Dispose();
                 }
             })
             .AddTo(compositeDisposableNeedle);
     }
 
-    private void BubbleTransform(Vector3 position)
+    private async UniTask Hoge()
     {
-        if (isStopped) return; // 静止中は処理をスキップ
+        // 点Aから円Bの中心への方向ベクトル
+        Vector3 direction = (TargetPoint - initialSpeechBubblePosition).normalized;
 
-        // 現在の角度を取得（オブジェクトのz軸方向を基準とする）
-        float angle = Vector3.Angle(Vector3.right, inGameView.GetSpeechBubbleTransform().right);
+        // 円Bに接する点Cを計算
+        Vector3 pointC = TargetPoint + direction * Distance;
 
-        //失敗したパターン
-        if (angle is < MinBubbleAngle or > MaxBubbleAngle)
+        // ベクトルABとACを計算
+        Vector3 vectorAB = TargetPoint - initialSpeechBubblePosition;
+        Vector3 vectorAC = pointC - initialSpeechBubblePosition;
+
+        // 角度CABを計算
+        //半分にしたのが判定用の角度
+        float angleCAB = Vector3.Angle(vectorAB, vectorAC);
+
+        float judgeAngleCAB = angleCAB / 2;
+        //場所の計算
+        //クリア
+        //吹き出しの移動
+        if (finalQuaternion.eulerAngles.z < judgeAngleCAB || finalQuaternion.eulerAngles.z > -judgeAngleCAB)
         {
-            // 範囲外: 現在の方向に直進
-            inGameView.SetSpeechBubbleImage(Vector3.right * Speed * Time.deltaTime);
-            float distance = Vector3.Distance(inGameView.GetSpeechBubbleTransform().position, position);
-
-            if (distance > FailedStopDistance)
-            {
-                isStopped = true;
-                isClear = false;
-            }
+            var movePosition = pointC;
+            await inGameView.GetSpeechBubbleTransform().DOAnchorPos(movePosition, 10).AsyncWaitForCompletion();
         }
-        else　//成功したパターン
+        else
         {
-            // 範囲内: 目標点への距離を計算
-            float distanceToTarget = Vector3.Distance(inGameView.GetSpeechBubbleTransform().position, TargetPoint);
+            // 角度をラジアンに変換
+            float angleInRadians = (finalQuaternion * Vector3.right).z * Mathf.Deg2Rad;
 
-            if (distanceToTarget > ClearStopDistance)
-            {
-                // 目標点に向かって移動
-                Vector3 direction = (TargetPoint - inGameView.GetSpeechBubbleTransform().position).normalized;
-                inGameView.SetSpeechBubbleImage(direction * Speed * Time.deltaTime);
-            }
-            else
-            {
-                // 目標点付近で静止
-                isStopped = true;
-                isClear = true;
-                Debug.Log("目標点付近で静止しました。");
-            }
+            // 新しい点の位置を計算
+            Vector3 movePosition = new Vector3(
+                initialSpeechBubblePosition.x + FailedStopDistance * Mathf.Cos(angleInRadians),
+                initialSpeechBubblePosition.y + FailedStopDistance * Mathf.Sin(angleInRadians),
+                initialSpeechBubblePosition.z // 2Dの場合はzをそのまま維持
+            );
+
+            await inGameView.GetSpeechBubbleTransform().DOAnchorPos(movePosition, 10).AsyncWaitForCompletion();
         }
+
+        await UniTask.WaitForSeconds(2);
+
+        inGameView.SetGameResultPerformance(isClear);
     }
 }
